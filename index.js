@@ -1,9 +1,18 @@
 const Markov = require('./Markov.js');
 const markov = new Markov();
+// const Discord = require('discord.js');
+// const client = new Discord.Client();
+
+// client.on('ready', () => {
+//     console.log(`logged in as ${client.user.tag}`);
+// })
+
 
 
 (async() => {
-    await markov.generateChain('Frustrated by his failure to properly plan for the massive traffic jam along I-95, local driver Ken Boswell was reportedly kicking himself Tuesday for eating the entire hitchhiker he had picked up before getting stuck in last night’s snowstorm.');
+    await markov.loadChainFromFile();
+    // await markov.generateChain('Hey, its me');
+    // await markov.generateChain('bruh moment this doesnt work');
 
     console.log(markov.generateSentence());
 })();

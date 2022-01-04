@@ -2,16 +2,30 @@ const fs = require('fs');
 
 module.exports = class Markov {
     constructor() {
-        this.chain = this.loadChain();
+        this.chain = {}
     }
 
-    async loadChain() {
-        let chain = JSON.parse(fs.readFileSync('./chain.json', 'utf8'));
-        return chain;
+    async loadChainFromFile() {
+        return new Promise(async (resolve, reject) => {
+            await fs.readFile('./chain.json', 'utf8', (err, data) => {
+                if (err) reject(err);
+
+                this.chain = JSON.parse(data);
+                resolve(data)
+            })
+        })
+    }
+
+    async setChainInFile() {
+        return new Promise(async (resolve, reject) => {
+            await fs.writeFile('./chain.json', JSON.stringify(this.chain), (err) => {
+                if (err) reject(err);
+                resolve(this.chain);
+            })
+        })
     }
 
     async generateChain(string) {
-        console.log(this.chain)
         const textArr = string.split(' ');
 
         for (let i = 0; i < textArr.length - 1; i++) {
@@ -27,7 +41,7 @@ module.exports = class Markov {
                 this.chain[key] = [value];
             }
         }
-        fs.writeFileSync('./chain.json', JSON.stringify(this.chain));
+        await this.setChainInFile();
         return this.chain;
     }
 
