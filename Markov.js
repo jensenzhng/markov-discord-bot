@@ -1,25 +1,24 @@
+const fs = require('fs');
+
 module.exports = class Markov {
     constructor() {
-        this.string = '';
-        this.chain = {};
+        this.chain = this.loadChain();
     }
 
-    setString(string) { 
-        this.string = string;
-        return this.string
+    async loadChain() {
+        let chain = JSON.parse(fs.readFileSync('./chain.json', 'utf8'));
+        return chain;
     }
 
-    getString() {
-        return this.string;
-    }
-
-    async generateChain() {
-        const textArr = this.string.split(' ');
+    async generateChain(string) {
+        console.log(this.chain)
+        const textArr = string.split(' ');
 
         for (let i = 0; i < textArr.length - 1; i++) {
+            //.replace(/[\W_]/, "").toLowerCase()
             //using two words as key
-            const key = `${textArr[i].replace(/[\W_]/, "").toLowerCase()}`;
-            const value = textArr[i + 1].replace(/[\W_]/, "").toLowerCase();
+            const key = `${textArr[i]}`;
+            const value = textArr[i + 1];
 
             // if the key already exists, add the value to already-existing key, else push the key and value to the chain
             if (this.chain[key]) {
@@ -28,6 +27,7 @@ module.exports = class Markov {
                 this.chain[key] = [value];
             }
         }
+        fs.writeFileSync('./chain.json', JSON.stringify(this.chain));
         return this.chain;
     }
 
@@ -45,14 +45,17 @@ module.exports = class Markov {
         const keys = Object.keys(this.chain);
         let startingWord = keys[Math.floor(Math.random() * keys.length)];
         let sentence = ``;
-        console.log(this.chain);
 
         for (let i = 0; i < this.getRandomInt(8, 18); i++) {
-            // console.log(i, startingWord);
             sentence += startingWord + ' ';
-            let nextWord = this.chain[startingWord][Math.floor(Math.random() * this.chain[startingWord].length)];
-            // sentence += ` ${nextWord}`;
-            startingWord = nextWord;
+            // console.log(i, startingWord);
+
+            if (this.chain[startingWord]) {
+                let nextWord = this.chain[startingWord][Math.floor(Math.random() * this.chain[startingWord].length)];
+                startingWord = nextWord;
+            } else {
+                break;
+            }
         }
 
         return sentence;
