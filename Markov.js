@@ -30,7 +30,6 @@ module.exports = class Markov {
 
         for (let i = 0; i < textArr.length - 1; i++) {
             //.replace(/[\W_]/, "").toLowerCase()
-            //using two words as key
             const key = `${textArr[i]}`;
             const value = textArr[i + 1];
 
@@ -41,6 +40,8 @@ module.exports = class Markov {
                 this.chain[key] = [value];
             }
         }
+
+        //push data to json file
         await this.setChainInFile();
         return this.chain;
     }
@@ -55,21 +56,32 @@ module.exports = class Markov {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    generateSentence() {
+    generateSentence(word) {
         const keys = Object.keys(this.chain);
-        let startingWord = keys[Math.floor(Math.random() * keys.length)];
-        let sentence = ``;
+        let sentence = '', startingWord;
 
-        for (let i = 0; i < this.getRandomInt(8, 18); i++) {
+        if (word) {
+            startingWord = word;
+        } else {
+            startingWord = keys[Math.floor(Math.random() * keys.length)];
+        }
+
+        for (let i = 0; i < this.getRandomInt(8, 28); i++) {
             sentence += startingWord + ' ';
-            // console.log(i, startingWord);
 
             if (this.chain[startingWord]) {
                 let nextWord = this.chain[startingWord][Math.floor(Math.random() * this.chain[startingWord].length)];
                 startingWord = nextWord;
+                if (nextWord.endsWith('.')) {
+                    break;
+                }
             } else {
                 break;
             }
+        }
+
+        if (sentence.split(' ').length < 4) {
+            return this.generateSentence();
         }
 
         return sentence;
