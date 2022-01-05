@@ -17,6 +17,7 @@ client.on('message', async msg => {
     if (msg.content === '!generate') {
         let content = await markov.generateSentence();
         msg.channel.send(content);
+        return;
     }
 
     if (msg.content) {
