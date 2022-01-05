@@ -17,10 +17,11 @@ client.on('message', async msg => {
         msg.channel.send(content);
         return;
     } 
-    
+
     if (msg.content === '!search' && msg.member.hasPermission('ADMINISTRATOR')) {
-      let msgs = await fetchMore(client.channels.cache.get(msg.channel.id), 1000);
+      let msgs = await fetchMore(client.channels.cache.get(msg.channel.id), 5000);
       msgs.filter((msg) => {if(!msg.author.bot){markov.generateChain(msg.content);}});
+      msg.channel.send('updated!')
     }
 
     if (msg.content) {
@@ -40,7 +41,7 @@ client.on('message', async msg => {
     }
 })
 
-async function fetchMore(channel, limit = 1000) {
+async function fetchMore(channel, limit = 5000) {
     if (!channel) {
       throw new Error(`Expected channel, got ${typeof channel}.`);
     }
