@@ -1,3 +1,4 @@
+require('dotenv').config()
 const Markov = require('./Markov.js');
 const markov = new Markov();
 const {Collection, Client} = require('discord.js');
@@ -22,10 +23,15 @@ client.on('message', async msg => {
         markov.generateChain(msg.content);
     }
 
-    let rand = await markov.getRandomInt(4,8);
-    console.log(rand);
+    let rand = await markov.getRandomInt(4,7);
     if (rand == 5) {
-        let content = await markov.generateSentence();
+        let content;
+        rand = await markov.getRandomInt(4,4);
+        if (rand == 4 && msg.content.split.length > 1) {
+            let split = msg.content.split(' ')
+            content = await markov.generateSentence(split[Math.floor(Math.random() * split.length - 1)]);
+        } else { content = await markov.generateSentence(); }
+
         msg.channel.send(content);
     }
 })
@@ -64,10 +70,4 @@ async function fetchMore(channel, limit = 1000) {
     return collection;
 }
 
-client.login('ODU2OTk3MzI2MDUxNjA2NTU4.YNJK9A.EBdORGnICSoaW_4e3MgPQtPtIkI').catch(err => {console.log(err);})
-
-// (async() => {
-//     await markov.loadChainFromFile();
-
-//     console.log(markov.generateSentence());
-// })();
+client.login(process.env.TOKEN).catch(err => {console.log(err);})
