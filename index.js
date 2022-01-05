@@ -7,8 +7,6 @@ const client = new Client();
 client.on('ready', async() => {
     console.log(`logged in as ${client.user.tag}`);
     await markov.loadChainFromFile();
-    // let x = await fetchMore(client.channels.cache.get('887043793147265134'), 1000);
-    // x.filter((msg) => {if(!msg.author.bot){markov.generateChain(msg.content);}});
 })
 
 client.on('message', async msg => {
@@ -18,6 +16,11 @@ client.on('message', async msg => {
         let content = await markov.generateSentence();
         msg.channel.send(content);
         return;
+    } 
+    
+    if (msg.content === '!search' && msg.member.hasPermission('ADMINISTRATOR')) {
+      let msgs = await fetchMore(client.channels.cache.get(msg.channel.id), 1000);
+      msgs.filter((msg) => {if(!msg.author.bot){markov.generateChain(msg.content);}});
     }
 
     if (msg.content) {
