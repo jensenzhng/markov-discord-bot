@@ -63,24 +63,24 @@ module.exports = class Markov {
         if (word) {
             startingWord = word;
         } else {
-            startingWord = keys[Math.floor(Math.random() * keys.length)];
+            startingWord = keys[Math.floor(Math.random() * keys.length)]; //random starting word
         }
 
         for (let i = 0; i < this.getRandomInt(8, 28); i++) {
             sentence += startingWord + ' ';
 
-            if (this.chain[startingWord]) {
-                let nextWord = this.chain[startingWord][Math.floor(Math.random() * this.chain[startingWord].length)];
+            if (this.chain[startingWord]) { // if the starting word exists in the chain
+                let nextWord = this.chain[startingWord][Math.floor(Math.random() * this.chain[startingWord].length)]; //random next word from the starting word
                 startingWord = nextWord;
-                if (nextWord.endsWith('.') || nextWord.endsWith('?') || nextWord.endsWith('!')) {
+                if (nextWord.endsWith('.') || nextWord.endsWith('?') || nextWord.endsWith('!')) { //if the next word ends with a punctuation mark, break the loop bc it's probably the end of a sentence
                     break;
                 }
-            } else {
+            } else { // break the loop if the starting word doesn't exist in the chain to prevent errors
                 break;
             }
         }
 
-        if (sentence.split(' ').length < 4) {
+        if (sentence.split(' ').length < 4) { // if the sentence is less than 4 words, generate a new sentence bc ones less than 4 words are boring 
             return this.generateSentence();
         }
 
