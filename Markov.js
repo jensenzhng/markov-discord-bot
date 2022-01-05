@@ -86,18 +86,4 @@ module.exports = class Markov {
 
         return sentence;
     }
-
-    generateSentence1() {
-        const keys = Object.keys(this.chain);
-        let sentence = '';
-
-        for (let i = 0; i < keys.length; i++) {
-            const key = keys[i];
-            const values = this.chain[key];
-
-            const rand = Math.floor(Math.random() * values.length);
-            sentence += values[rand] + ' ';
-        }
-        return sentence;
-    }
 }
