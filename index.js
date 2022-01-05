@@ -19,8 +19,10 @@ client.on('message', async msg => {
     } 
 
     if (msg.content === '!search' && msg.member.hasPermission('ADMINISTRATOR')) {
+      let dmsg = await msg.channel.send('loading...');
       let msgs = await fetchMore(client.channels.cache.get(msg.channel.id), 5000);
       msgs.filter((msg) => {if(!msg.author.bot){markov.generateChain(msg.content);}});
+      await dmsg.delete()
       msg.channel.send('updated!')
     }
 
@@ -72,6 +74,7 @@ async function fetchMore(channel, limit = 5000) {
       lastId = messages.last().id;
     }
   
+    console.log(lastId);
     return collection;
 }
 

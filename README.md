@@ -37,5 +37,5 @@ The more limited the data set, the more similar the sentences will be. That's wh
 5. Run the bot with `node index.js`
 
 ## Bot commands:
-* `!search` - creates a Markov Chain model from the last 1000 messages in the channel you typed the command in
+* `!search` - creates a Markov Chain model from the last 5000 messages in the channel you typed the command in
 * `!generate` - generates a sentence based on the Markov Chain model
