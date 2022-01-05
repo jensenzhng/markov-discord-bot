@@ -72,7 +72,7 @@ module.exports = class Markov {
             if (this.chain[startingWord]) {
                 let nextWord = this.chain[startingWord][Math.floor(Math.random() * this.chain[startingWord].length)];
                 startingWord = nextWord;
-                if (nextWord.endsWith('.') || nextWord.endsWith('?')) {
+                if (nextWord.endsWith('.') || nextWord.endsWith('?') || nextWord.endsWith('!')) {
                     break;
                 }
             } else {
